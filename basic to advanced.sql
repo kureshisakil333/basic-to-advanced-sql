@@ -95,3 +95,54 @@ SELECT count(emp_id) as "total_employees" FROM emp;
 SELECT min(salary) as "min_salary",max(salary) as "max_salary"
 FROM emp;
 
+-- WHERE + LIKE + IN
+
+-- 11) find employees whose name start with 'A'
+SELECT * FROM emp
+WHERE emp_name LIKE 'A%';
+
+-- 12) find employees whose city ends with 'A'
+SELECT * FROM emp
+WHERE city LIKE '%a';
+
+-- 13) find employees in ahmedabad,surat and pune
+SELECT * FROM emp
+WHERE city  IN ("Ahmedabad","Surat","Pune");
+
+-- 14) find employees not in IT department
+SELECT e.emp_name,d.dept_name
+FROM emp e
+INNER JOIN departments d
+ON e.dept_id=d.dept_id
+WHERE d.dept_name NOT LIKE '%IT%';
+
+-- 15) find employees with salary between 50000 and 70000
+SELECT * FROM emp
+WHERE salary BETWEEN 50000 AND 70000;
+
+-- Aggregate function :
+
+-- 16) find average salary
+SELECT avg(salary) as "average_salary" FROM emp;
+
+-- 17) find total salary department wise
+SELECT d.dept_name,sum(e.salary) as "total_salary"
+FROM departments d
+INNER JOIN emp e
+ON d.dept_id=e.dept_id
+GROUP BY d.dept_name;
+
+-- 18) count employees in each city
+SELECT city,count(emp_id) as "total_employee"
+FROM emp GROUP BY city;
+
+-- 19) find average salary city wise
+SELECT city,avg(salary) as `average salary`
+FROM emp GROUP BY city;
+
+-- 20) find highest salary in each department
+SELECT d.dept_name,max(e.salary) as `highest salary`
+FROM departments d
+INNER JOIN emp e
+ON d.dept_id=e.dept_id
+GROUP BY d.dept_name;
