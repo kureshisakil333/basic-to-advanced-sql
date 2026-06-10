@@ -146,3 +146,68 @@ FROM departments d
 INNER JOIN emp e
 ON d.dept_id=e.dept_id
 GROUP BY d.dept_name;
+
+-- group by + having
+
+-- 21) find department with more then 3 employees
+SELECT d.dept_name,count(e.emp_id) AS total_emp
+FROM departments d
+JOIN emp e
+ON d.dept_id=e.dept_id
+GROUP BY d.dept_name HAVING total_emp > 3;
+
+-- 22) find cities where average salary > 60000
+SELECT city,AVG(salary) AS avg_salary
+FROM emp GROUP BY city HAVING avg_salary > 60000;
+
+-- 23) find department with total salary > 200000
+SELECT d.dept_name,sum(e.salary) AS total_salary
+FROM departments d
+JOIN emp e
+ON d.dept_id=e.dept_id
+GROUP BY d.dept_name HAVING total_salary > 200000;
+
+-- 24) find cities having more than 2 employees
+SELECT city,count(emp_id) AS total_emp
+FROM emp GROUP BY city HAVING total_emp > 2;
+
+-- 25) find average salary by gender
+SELECT gender,avg(salary) AS avg_salary
+FROM emp GROUP BY gender;
+
+-- join practice question
+
+-- 26) show employees name with department name.
+SELECT e.emp_name,d.dept_name
+FROM emp e
+JOIN departments d
+ON e.dept_id=d.dept_id;
+
+-- 27) show all employees and their project name
+SELECT e.emp_name,p.project_name
+FROM emp e
+JOIN projects p
+ON e.dept_id=p.dept_id;
+
+-- 28) find employees working in IT
+SELECT e.emp_name,d.dept_name
+FROM emp e
+JOIN departments d
+ON e.dept_id=d.dept_id
+WHERE d.dept_name="IT";
+
+-- 29) show project budgets with department name
+SELECT d.dept_name,p.project_name,p.budget AS project_budget
+FROM departments d
+JOIN projects p
+ON d.dept_id=p.dept_id;
+
+-- 30) find employees whose department budget > 300000
+SELECT e.emp_name,d.dept_name,p.budget AS project_budgets
+FROM emp e
+JOIN departments d
+ON e.dept_id=d.dept_id
+JOIN projects p
+ON e.dept_id=p.dept_id
+WHERE p.budget > 300000;
+
