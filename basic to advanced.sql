@@ -211,3 +211,44 @@ JOIN projects p
 ON e.dept_id=p.dept_id
 WHERE p.budget > 300000;
 
+-- subqueries practice question
+
+-- 31) find second highest salary
+-- sub query  (SELECT max(salary) FROM emp)
+SELECT emp_name,max(salary) as max_salary
+FROM emp WHERE salary < (SELECT max(salary) FROM emp)
+GROUP BY emp_name LIMIT 1;
+select * from emp order by salary desc;
+
+-- 32) find employees earning above average salary
+-- sub query (select avg(salary) from emp);
+SELECT emp_name,salary FROM emp
+WHERE salary > (SELECT avg(salary) FROM emp);
+
+-- 33) find highest paid employee from each department
+-- sub query((SELECT MAX(salary) FROM emp WHERE dept_id=e.dept_id))
+SELECT d.dept_name,e.emp_id,e.emp_name,e.salary
+FROM emp e
+JOIN departments d
+ON d.dept_id=e.dept_id
+WHERE e.salary=(SELECT MAX(salary) FROM emp WHERE dept_id=e.dept_id);
+
+-- 34) find department with no employee
+SELECT d.dept_name,count(e.emp_id) as total_emp
+FROM emp e
+JOIN departments d
+ON e.dept_id=d.dept_id
+GROUP BY d.dept_name HAVING total_emp < 0;
+
+-- 35) find employees hired before the oldest IT employee
+SELECT e.emp_name, e.hire_date
+FROM emp e
+WHERE e.hire_date < (
+    SELECT MIN(e2.hire_date)
+    FROM emp e2
+    JOIN departments d
+        ON e2.dept_id = d.dept_id
+    WHERE d.dept_name = 'IT'
+);
+
+
