@@ -251,4 +251,55 @@ WHERE e.hire_date < (
     WHERE d.dept_name = 'IT'
 );
 
+-- window functions practice question
 
+-- 36)Rank employee by salary
+SELECT emp_id,emp_name,salary,
+RANK() OVER (ORDER BY salary DESC) AS salary_rank
+FROM emp;
+
+-- 37)dense rank employees department-wise
+SELECT e.emp_id,e.emp_name,d.dept_name,e.salary,
+DENSE_RANK() OVER (PARTITION BY d.dept_name ORDER BY e.salary DESC) AS dept_salary_rank
+FROM emp e
+INNER JOIN departments d
+ON e.dept_id = d.dept_id;
+
+-- 38)find running total of salary
+SELECT emp_id,emp_name,salary,SUM(salary) OVER (ORDER BY emp_id) AS running_total_salary
+FROM emp;
+
+-- 39)find top 3 salary in each department
+SELECT emp_id,emp_name,dept_name,salary
+FROM (SELECT e.emp_id,e.emp_name,d.dept_name,e.salary,DENSE_RANK() OVER (PARTITION BY d.dept_name ORDER BY e.salary DESC) AS salary_rank FROM emp e INNER JOIN departments d ON e.dept_id = d.dept_id) AS ranked
+WHERE salary_rank <= 3;
+
+-- 40)find previous employee salary using lag()
+SELECT emp_id,emp_name,salary,
+LAG(salary) OVER (ORDER BY emp_id) AS previous_salary
+FROM emp;
+
+-- Date function practice question
+
+-- 41)find employees hired after 2021
+SELECT emp_id,emp_name,hire_date
+FROM emp WHERE year(hire_date) > 2021;
+
+-- 42)find emloyees hired in january
+SELECT emp_id,emp_name,hire_date
+FROM emp WHERE MONTH(hire_date) = 1;
+
+-- 43)find years of experience
+SELECT emp_id,emp_name,hire_date,
+TIMESTAMPDIFF(YEAR, hire_date, CURDATE()) AS years_of_experience
+FROM emp;
+
+-- 44)find orders placed in march
+SELECT * FROM orders
+WHERE MONTH(order_date) = 3;
+
+-- 45)Find monthly sales amount
+SELECT YEAR(order_date) AS sales_year,MONTH(order_date) AS sales_month,SUM(amount) AS monthly_sales
+FROM orders
+GROUP BY YEAR(order_date), MONTH(order_date)
+ORDER BY sales_year, sales_month; 
